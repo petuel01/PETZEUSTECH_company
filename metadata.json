@@ -1,0 +1,6 @@
+{
+  "name": "PETZEUSTECH — Digital Solutions & Innovation",
+  "description": "Official company platform and customer portal for PETZEUSTECH. Powering Africa's digital future with software labs, cloud hosting, creative design, electronics repair, digital marketing, and IT academy.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
