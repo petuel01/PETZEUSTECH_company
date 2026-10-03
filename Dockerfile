@@ -1,69 +1,40 @@
 # ========================================================
-# PETZEUSTECH Multi-Stage Production Dockerfile
-# Optimized for Linux VPS, low memory usage, and high security
+# PETZEUSTECH Production Frontend Dockerfile
+# Builds Vite React 19 app and serves with Nginx Alpine
+# Fast, lightweight (<25MB), zero node runtime overhead
 # ========================================================
 
-# --- Stage 1: Build Stage ---
+# --- Stage 1: Build Frontend Assets ---
 FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Install build dependencies
-RUN apk add --no-cache python3 make g++
-
-# Copy package files
+# Copy package descriptors
 COPY package*.json ./
 
-# Install all dependencies (including devDependencies needed for build)
+# Install dependencies cleanly
 RUN npm install
 
-# Copy application source files
+# Copy application source code
 COPY . .
 
-# Build Vite frontend & bundle Express server to dist/server.cjs
+# Compile Vite production bundle to /app/dist
 RUN npm run build
 
-# --- Stage 2: Production Runtime Stage ---
-FROM node:22-alpine AS runner
+# --- Stage 2: Production Nginx Server ---
+FROM nginx:1.27-alpine AS runner
 
-WORKDIR /app
+# Remove default nginx welcome html
+RUN rm -rf /usr/share/nginx/html/*
 
-# Install curl for container health check
-RUN apk add --no-cache curl tzdata
+# Copy built frontend assets from builder stage
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Set timezone
-ENV TZ=Africa/Douala
+# Copy optimized SPA nginx configuration
+COPY nginx/frontend.conf /etc/nginx/conf.d/default.conf
 
-# Set production environment
-ENV NODE_ENV=production
-ENV PORT=3000
+# Expose HTTP port
+EXPOSE 80
 
-# Copy package files
-COPY package*.json ./
-
-# Install production dependencies only
-RUN npm install --omit=dev && npm cache clean --force
-
-# Copy built artifacts from builder stage
-COPY --from=builder /app/dist ./dist
-
-# Create data directory for JSON database persistence
-RUN mkdir -p /app/data
-
-# Create dedicated non-root user for security
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001 -G nodejs && \
-    chown -R nodejs:nodejs /app
-
-# Switch to non-root user
-USER nodejs
-
-# Expose server port
-EXPOSE 3000
-
-# Docker Healthcheck
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD curl -f http://localhost:3000/api/health || exit 1
-
-# Start production server
-CMD ["node", "dist/server.cjs"]
+# Run nginx in foreground
+CMD ["nginx", "-g", "daemon off;"]

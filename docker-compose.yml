@@ -1,87 +1,21 @@
 version: '3.8'
 
 # ========================================================
-# PETZEUSTECH Production Docker Compose Architecture
-# Hostname: petzeustech.com & www.petzeustech.com
+# PETZEUSTECH Production Frontend Docker Compose
+# Domain: petzeustech.com & IP: 162.35.183.158
 # ========================================================
 
 services:
-  # 1. Main Node.js / Express Full-Stack Application
-  app:
+  web:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: petzeustech-app
-    restart: unless-stopped
-    environment:
-      - NODE_ENV=production
-      - PORT=3000
-      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
-      - ADMIN_KEY=${ADMIN_KEY:-petzeustech_admin_2026}
-    volumes:
-      - petzeustech_data:/app/data
-    networks:
-      - petzeustech_network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
-      interval: 20s
-      timeout: 5s
-      retries: 3
-      start_period: 15s
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-
-  # 2. High-Performance Nginx Reverse Proxy with SSL
-  nginx:
-    image: nginx:1.27-alpine
-    container_name: petzeustech-nginx
+    container_name: petzeustech-web
     restart: unless-stopped
     ports:
       - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - certbot_etc:/etc/letsencrypt:ro
-      - certbot_var:/var/lib/letsencrypt:ro
-      - certbot_challenge:/var/www/certbot:ro
-    depends_on:
-      app:
-        condition: service_healthy
-    networks:
-      - petzeustech_network
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
-
-  # 3. Automated Let's Encrypt SSL Renewal
-  certbot:
-    image: certbot/certbot:latest
-    container_name: petzeustech-certbot
-    restart: unless-stopped
-    volumes:
-      - certbot_etc:/etc/letsencrypt
-      - certbot_var:/var/lib/letsencrypt
-      - certbot_challenge:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    networks:
-      - petzeustech_network
-
-volumes:
-  petzeustech_data:
-    driver: local
-  certbot_etc:
-    driver: local
-  certbot_var:
-    driver: local
-  certbot_challenge:
-    driver: local
-
-networks:
-  petzeustech_network:
-    driver: bridge

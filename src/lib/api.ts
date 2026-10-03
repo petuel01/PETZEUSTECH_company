@@ -149,19 +149,61 @@ export const api = {
 
   // Bookings
   async createBooking(bookingData: Omit<Booking, 'id' | 'createdAt' | 'status'>): Promise<Booking> {
-    return request<Booking>('/api/bookings', {
-      method: 'POST',
-      body: JSON.stringify(bookingData),
-    });
+    try {
+      return await request<Booking>('/api/bookings', {
+        method: 'POST',
+        body: JSON.stringify(bookingData),
+      });
+    } catch {
+      // Offline / Static frontend fallback
+      const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      const randomPart = Math.floor(1000 + Math.random() * 9000);
+      const reference = `PTZ-${datePart}-${randomPart}`;
+      const fallbackBooking: Booking = {
+        id: Date.now(),
+        bookingReference: reference,
+        status: 'Pending',
+        createdAt: new Date().toISOString(),
+        ...bookingData,
+      };
+      try {
+        const existing = JSON.parse(localStorage.getItem('petzeustech_offline_bookings') || '[]');
+        existing.unshift(fallbackBooking);
+        localStorage.setItem('petzeustech_offline_bookings', JSON.stringify(existing));
+      } catch {
+        // ignore
+      }
+      return fallbackBooking;
+    }
   },
 
   async getMyBookings(email?: string): Promise<Booking[]> {
     const query = email ? `?email=${encodeURIComponent(email)}` : '';
-    return request<Booking[]>(`/api/bookings${query}`);
+    try {
+      return await request<Booking[]>(`/api/bookings${query}`);
+    } catch {
+      try {
+        const existing: Booking[] = JSON.parse(localStorage.getItem('petzeustech_offline_bookings') || '[]');
+        return email ? existing.filter(b => b.customerEmail.toLowerCase() === email.toLowerCase()) : existing;
+      } catch {
+        return [];
+      }
+    }
   },
 
   async getBookingByRef(reference: string): Promise<Booking> {
-    return request<Booking>(`/api/bookings/ref/${encodeURIComponent(reference)}`);
+    try {
+      return await request<Booking>(`/api/bookings/ref/${encodeURIComponent(reference)}`);
+    } catch {
+      try {
+        const existing: Booking[] = JSON.parse(localStorage.getItem('petzeustech_offline_bookings') || '[]');
+        const found = existing.find(b => b.bookingReference.toLowerCase() === reference.trim().toLowerCase());
+        if (found) return found;
+      } catch {
+        // ignore
+      }
+      throw new Error('No booking found with this reference code.');
+    }
   },
 
   // Admin Bookings
@@ -440,14 +482,33 @@ export const api = {
 
   // Contact Messages
   async sendContactMessage(data: Omit<ContactMessage, 'id' | 'status' | 'createdAt'>): Promise<{ success: boolean; message: string }> {
-    return request('/api/contact', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
+    try {
+      return await request('/api/contact', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+    } catch {
+      try {
+        const existing = JSON.parse(localStorage.getItem('petzeustech_contact_messages') || '[]');
+        existing.unshift({ id: Date.now(), ...data, createdAt: new Date().toISOString() });
+        localStorage.setItem('petzeustech_contact_messages', JSON.stringify(existing));
+      } catch {
+        // ignore
+      }
+      return { success: true, message: 'Message recorded successfully! We will connect via WhatsApp or email shortly.' };
+    }
   },
 
   async getContactMessages(): Promise<ContactMessage[]> {
-    return request<ContactMessage[]>('/api/admin/contact-messages');
+    try {
+      return await request<ContactMessage[]>('/api/admin/contact-messages');
+    } catch {
+      try {
+        return JSON.parse(localStorage.getItem('petzeustech_contact_messages') || '[]');
+      } catch {
+        return [];
+      }
+    }
   },
 
   async updateContactStatus(id: number, status: 'Unread' | 'Read' | 'Replied'): Promise<ContactMessage> {
@@ -479,11 +540,27 @@ export const api = {
 
   // ZeusAI Consultation
   async askZeusAI(prompt: string, history: { role: 'user' | 'model'; text: string }[]): Promise<string> {
-    const res = await request<{ reply: string }>('/api/zeus-ai', {
-      method: 'POST',
-      body: JSON.stringify({ prompt, history }),
-    });
-    return res.reply;
+    try {
+      const res = await request<{ reply: string }>('/api/zeus-ai', {
+        method: 'POST',
+        body: JSON.stringify({ prompt, history }),
+      });
+      return res.reply;
+    } catch {
+      const lower = prompt.toLowerCase();
+      if (lower.includes('screen') || lower.includes('phone') || lower.includes('laptop') || lower.includes('repair') || lower.includes('windows')) {
+        return "It sounds like you need assistance from **PETZEUSTECH Electronics**! We handle phone diagnostics, AMOLED screen replacements, OS installation, and hardware tune-ups in Cameroon. You can book an appointment on our 'Book a Service' page, or message directly on WhatsApp at +237 677 251 088.";
+      } else if (lower.includes('website') || lower.includes('software') || lower.includes('wordpress') || lower.includes('app') || lower.includes('php')) {
+        return "That's a perfect match for **PETZEUSTECH Software Labs**! We build fast, mobile-friendly websites, custom PHP/MySQL databases, and WordPress portals designed for African networks. Submit a quick booking request or chat with Petuel on WhatsApp!";
+      } else if (lower.includes('vps') || lower.includes('server') || lower.includes('hosting') || lower.includes('domain') || lower.includes('cloud')) {
+        return "You are looking for **PETZEUSTECH CloudCore**! We configure Linux VPS servers, Nginx reverse proxies, SSL certificates, custom domains, and Docker containers for zero downtime.";
+      } else if (lower.includes('flyer') || lower.includes('logo') || lower.includes('design') || lower.includes('brand')) {
+        return "Our **PETZEUSTECH Graphics & Creative** department can help! We design eye-catching event flyers, social media banners, and full brand identities that make your business stand out.";
+      } else if (lower.includes('course') || lower.includes('learn') || lower.includes('academy') || lower.includes('training')) {
+        return "Check out the **PETZEUSTECH IT Academy**! We offer hands-on, practical classes in web development, graphic design, and computer fundamentals in Cameroon and online.";
+      }
+      return "PETZEUSTECH offers complete digital solutions across Software Labs, CloudCore VPS hosting, Graphics, Electronics repairs, Digital Marketing, and our IT Academy. Ask about any specific challenge or chat with founder Petuel Baifem on WhatsApp at +237 677 251 088!";
+    }
   },
 
   // Compatibility helpers

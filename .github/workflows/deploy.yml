@@ -1,4 +1,4 @@
-name: PETZEUSTECH Automated Continuous Deployment
+name: PETZEUSTECH Continuous Deployment
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  test_and_deploy:
-    name: Build, Lint & Deploy to VPS
+  build_and_deploy:
+    name: Build, Lint & Deploy Frontend
     runs-on: ubuntu-latest
 
     steps:
@@ -18,27 +18,35 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
 
       - name: Install Dependencies
-        run: npm ci
+        run: npm install
 
       - name: Run TypeScript & Linting Checks
         run: npm run lint
 
-      - name: Verify Build
+      - name: Compile Production Build
         run: npm run build
 
       - name: Deploy to VPS via SSH
-        if: success() && secrets.VPS_HOST != ''
+        if: ${{ secrets.VPS_PASSWORD != '' || secrets.VPS_SSH_KEY != '' }}
         uses: appleboy/ssh-action@v1.0.3
-        env:
-          VPS_HOST: ${{ secrets.VPS_HOST }}
         with:
-          host: ${{ secrets.VPS_HOST }}
+          host: ${{ secrets.VPS_HOST || '162.35.183.158' }}
           username: ${{ secrets.VPS_USER || 'root' }}
+          password: ${{ secrets.VPS_PASSWORD }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
           script: |
             cd /opt/petzeustech
             ./deploy.sh
+
+      - name: Post-Build Notice
+        if: ${{ secrets.VPS_PASSWORD == '' && secrets.VPS_SSH_KEY == '' }}
+        run: |
+          echo "================================================================"
+          echo " Build and Lint tests PASSED successfully!"
+          echo " To enable automatic deployment to 162.35.183.158:"
+          echo " Go to GitHub > Settings > Secrets and variables > Actions"
+          echo " Add secret: VPS_PASSWORD (value: your VPS password)"
+          echo "================================================================"
