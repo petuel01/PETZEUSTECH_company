@@ -6,7 +6,6 @@ import {
   ShieldCheck, 
   LogOut, 
   ChevronDown, 
-  Calendar,
   Sparkles,
   LayoutDashboard,
   Sun,
@@ -138,7 +137,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {/* Authentication / User Account Menu */}
-            {currentUser ? (
+            {currentUser && (
               <div className="relative">
                 <button
                   id="user-menu-btn"
@@ -214,15 +213,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </div>
                 )}
               </div>
-            ) : (
-              <button
-                id="header-book-btn"
-                onClick={() => handleNavClick('book')}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 shadow-md shadow-purple-900/30 transition-all hover:scale-105"
-              >
-                <Calendar className="w-3.5 h-3.5" />
-                <span>Book Service</span>
-              </button>
             )}
           </div>
 
@@ -279,7 +269,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           <div className="space-y-2 pt-1">
-            {currentUser ? (
+            {currentUser && (
               <div className={`pt-2 border-t space-y-1 ${isDark ? 'border-purple-900/40' : 'border-slate-200'}`}>
                 <div className={`px-3 py-1 text-xs ${isDark ? 'text-purple-300/80' : 'text-purple-700'}`}>
                   Logged in as <strong className={isDark ? 'text-white' : 'text-slate-900'}>{currentUser.fullName}</strong>
@@ -310,16 +300,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                   className="w-full text-left px-3 py-2 text-sm text-rose-500 hover:bg-rose-500/10 rounded-lg"
                 >
                   Sign Out
-                </button>
-              </div>
-            ) : (
-              <div className="pt-2">
-                <button
-                  onClick={() => handleNavClick('book')}
-                  className="w-full py-2.5 text-center text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl shadow-md shadow-purple-900/40 flex items-center justify-center gap-1.5"
-                >
-                  <Calendar className="w-4 h-4" />
-                  <span>Book a Service</span>
                 </button>
               </div>
             )}
