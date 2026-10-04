@@ -5,7 +5,6 @@ import {
   MapPin, 
   Globe, 
   ArrowUpRight, 
-  ShieldCheck, 
   Heart,
   Code,
   Server,
@@ -174,11 +173,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   Contact & Support
                 </button>
               </li>
-              <li>
-                <button onClick={() => onNavigate('customer-dashboard')} className={`transition-colors ${isDark ? 'hover:text-purple-300' : 'hover:text-purple-800'}`}>
-                  Customer Portal
-                </button>
-              </li>
             </ul>
           </div>
 
@@ -225,13 +219,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               className={`transition-colors ${isDark ? 'hover:text-slate-300' : 'hover:text-slate-900'}`}
             >
               Terms of Service
-            </button>
-            <button 
-              onClick={() => onNavigate('admin-dashboard')}
-              className={`transition-colors flex items-center gap-1 font-medium ${isDark ? 'text-purple-400/90 hover:text-purple-300' : 'text-purple-700 hover:text-purple-900'}`}
-            >
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Admin Console</span>
             </button>
           </div>
         </div>

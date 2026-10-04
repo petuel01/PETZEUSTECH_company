@@ -216,16 +216,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
             ) : (
               <button
-                id="header-signin-btn"
-                onClick={() => handleNavClick('signin')}
-                className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all border ${
-                  isDark 
-                    ? 'text-purple-300 hover:text-white bg-purple-950/40 hover:bg-purple-900/50 border-purple-500/30' 
-                    : 'text-purple-800 hover:text-purple-950 bg-purple-50 hover:bg-purple-100 border-purple-200'
-                }`}
+                id="header-book-btn"
+                onClick={() => handleNavClick('book')}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 shadow-md shadow-purple-900/30 transition-all hover:scale-105"
               >
-                <ShieldCheck className="w-4 h-4 text-purple-500" />
-                <span>Admin Login</span>
+                <Calendar className="w-3.5 h-3.5" />
+                <span>Book Service</span>
               </button>
             )}
           </div>
@@ -317,23 +313,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </button>
               </div>
             ) : (
-              <div className="pt-2 flex flex-col gap-2">
+              <div className="pt-2">
                 <button
-                  onClick={() => handleNavClick('signin')}
+                  onClick={() => handleNavClick('book')}
                   className="w-full py-2.5 text-center text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl shadow-md shadow-purple-900/40 flex items-center justify-center gap-1.5"
                 >
-                  <ShieldCheck className="w-4 h-4 text-cyan-200" />
-                  <span>Admin Access Portal</span>
-                </button>
-                <button
-                  onClick={() => handleNavClick('customer-dashboard')}
-                  className={`w-full py-2 text-center text-xs font-semibold border rounded-xl transition-colors ${
-                    isDark 
-                      ? 'border-purple-500/30 text-purple-200 hover:bg-purple-950/40' 
-                      : 'border-slate-300 text-slate-700 hover:bg-slate-100'
-                  }`}
-                >
-                  Track Booking / Customer Portal
+                  <Calendar className="w-4 h-4" />
+                  <span>Book a Service</span>
                 </button>
               </div>
             )}

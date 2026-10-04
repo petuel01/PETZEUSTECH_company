@@ -34,6 +34,32 @@ function AppContent() {
     }
   });
 
+  // Secret URL listener for Admin access (not exposed on public navbar)
+  React.useEffect(() => {
+    const handleUrlCheck = () => {
+      const hash = window.location.hash.toLowerCase();
+      const search = new URLSearchParams(window.location.search);
+      const path = window.location.pathname.toLowerCase();
+
+      if (
+        hash === '#admin-portal' || 
+        hash === '#portal' || 
+        hash === '#admin' || 
+        hash === '#login' ||
+        search.get('portal') === 'admin' ||
+        search.get('admin') === 'access' ||
+        search.get('admin') === 'petuel' ||
+        path.includes('admin-portal')
+      ) {
+        setCurrentPage('signin');
+      }
+    };
+
+    handleUrlCheck();
+    window.addEventListener('hashchange', handleUrlCheck);
+    return () => window.removeEventListener('hashchange', handleUrlCheck);
+  }, []);
+
   const handleNavigate = (page: string, param?: string) => {
     setCurrentPage(page);
     setPageParam(param);

@@ -27,6 +27,7 @@ import { APP_IMAGES } from '../assets/images';
 import { api } from '../lib/api';
 import { Project, Announcement } from '../types';
 import { useTheme } from '../context/ThemeContext';
+import { TechMotionShowcase } from '../components/TechMotionShowcase';
 
 interface HomeProps {
   onNavigate: (page: string, param?: string) => void;
@@ -353,6 +354,12 @@ export const Home: React.FC<HomeProps> = ({ onNavigate }) => {
           </div>
         </div>
       </motion.section>
+
+      {/* TECH IN MOTION: Interactive Motion & Video Simulation */}
+      <TechMotionShowcase 
+        onNavigateToBook={(slug) => onNavigate('book', slug)}
+        onNavigateToServices={(slug) => onNavigate('services', slug)}
+      />
 
       {/* 2. SERVICE HIGHLIGHTS (All 6 Departments) */}
       <motion.section 

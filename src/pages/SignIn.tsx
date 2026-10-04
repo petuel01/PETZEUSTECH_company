@@ -5,11 +5,8 @@ import {
   ArrowRight, 
   ShieldCheck, 
   AlertCircle,
-  KeyRound,
   Eye,
-  EyeOff,
-  Zap,
-  CheckCircle2
+  EyeOff
 } from 'lucide-react';
 import { api } from '../lib/api';
 import { User } from '../types';
@@ -23,20 +20,11 @@ interface SignInProps {
 
 export const SignIn: React.FC<SignInProps> = ({ onSuccess, onNavigate }) => {
   const { isDark } = useTheme();
-  const [email, setEmail] = useState('baifempetuel0.2@gmail.com');
-  const [password, setPassword] = useState('admin12345');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [demoFilled, setDemoFilled] = useState(false);
-
-  const handleQuickFill = () => {
-    setEmail('baifempetuel0.2@gmail.com');
-    setPassword('admin12345');
-    setDemoFilled(true);
-    setError(null);
-    setTimeout(() => setDemoFilled(false), 3000);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,31 +98,6 @@ export const SignIn: React.FC<SignInProps> = ({ onSuccess, onNavigate }) => {
               Restricted management console for Founder <strong>Petuel Baifem</strong> and authorized technical personnel.
             </p>
           </div>
-        </div>
-
-        {/* 1-Click Fast Fill Banner */}
-        <div className={`p-3.5 rounded-2xl border flex items-center justify-between gap-3 transition-all ${
-          isDark 
-            ? 'bg-[#111338]/90 border-purple-900/60 text-slate-200' 
-            : 'bg-purple-50/70 border-purple-200 text-slate-800'
-        }`}>
-          <div className="text-xs">
-            <span className="font-bold flex items-center gap-1 text-purple-500">
-              <Zap className="w-3.5 h-3.5 fill-purple-500" />
-              Demo Admin Credentials
-            </span>
-            <p className="text-[11px] text-slate-500 mt-0.5">
-              baifempetuel0.2@gmail.com / admin12345
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={handleQuickFill}
-            className="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1 whitespace-nowrap"
-          >
-            {demoFilled ? <CheckCircle2 className="w-3.5 h-3.5 text-white" /> : <KeyRound className="w-3.5 h-3.5" />}
-            <span>{demoFilled ? 'Filled!' : 'Fill Credentials'}</span>
-          </button>
         </div>
 
         {/* Error Alert */}

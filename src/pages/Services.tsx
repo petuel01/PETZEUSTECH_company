@@ -12,7 +12,8 @@ import {
   Calendar,
   Search,
   Filter,
-  Info
+  Info,
+  Globe
 } from 'lucide-react';
 import { DEPARTMENTS } from '../data/companyData';
 import { Department, Service } from '../types';
@@ -220,6 +221,35 @@ export const Services: React.FC<ServicesProps> = ({ onNavigate, initialDepartmen
                   </a>
                 </div>
               </div>
+
+              {/* Architecture Scope for Software & App Labs */}
+              {dept.slug === 'software-labs' && (
+                <div className={`p-4 rounded-2xl border text-xs grid grid-cols-1 md:grid-cols-3 gap-3 ${
+                  isDark ? 'bg-purple-950/40 border-purple-500/40 text-purple-200' : 'bg-purple-50 border-purple-200 text-purple-900'
+                }`}>
+                  <div className="flex items-start gap-2.5">
+                    <Smartphone className="w-4 h-4 text-purple-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <strong className="block font-bold">Mobile Applications</strong>
+                      <span className="text-[11px] opacity-80">Android APKs, iOS apps & PWAs with offline storage</span>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <Globe className="w-4 h-4 text-indigo-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <strong className="block font-bold">Websites & Web Apps</strong>
+                      <span className="text-[11px] opacity-80">Fast business websites, portals & SaaS dashboards</span>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <Code className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <strong className="block font-bold">Custom Software Systems</strong>
+                      <span className="text-[11px] opacity-80">Inventory, POS, database architecture & business APIs</span>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Notice for Electronics Department */}
               {dept.slug === 'electronics' && (
