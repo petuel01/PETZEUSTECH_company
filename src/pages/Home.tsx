@@ -198,7 +198,7 @@ export const Home: React.FC<HomeProps> = ({ onNavigate }) => {
                       </p>
                     </div>
                     <span className="px-2.5 py-1 text-[10px] font-bold rounded-full bg-emerald-500 text-white backdrop-blur-sm border border-emerald-400/40 shadow-sm">
-                      On-Site & Online
+                      100% Online & Remote
                     </span>
                   </div>
                 </div>
@@ -810,8 +810,8 @@ export const Home: React.FC<HomeProps> = ({ onNavigate }) => {
               a: "PETZEUSTECH was founded by Petuel Baifem, a full-stack software engineer and systems administrator based in Cameroon. Petuel personally oversees architectural design, hardware diagnostics, and student mentorship."
             },
             {
-              q: "Where is the physical office located and can international clients hire you?",
-              a: "Our central workshop and engineering lab are located in Cameroon. We serve both local Cameroonian clients on-site and remote clients across Africa and globally for software engineering, cloud systems, and branding."
+              q: "Can international clients hire you and how do your online services work?",
+              a: "We operate 100% online and remotely. We serve clients across Cameroon, Africa, and globally for software engineering, cloud systems, web design, digital marketing, and tech branding with seamless remote delivery."
             },
             {
               q: "How does the booking process and WhatsApp confirmation work?",

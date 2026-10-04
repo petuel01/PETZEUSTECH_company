@@ -24,9 +24,10 @@ fi
 
 # 2. Pull latest code if in a git repository
 if [ -d ".git" ]; then
-    echo "--> Pulling latest changes from GitHub (main)..."
+    echo "--> Syncing latest changes from GitHub (main)..."
     git fetch origin main || true
-    git pull origin main || echo "Proceeding with current checkout."
+    # Use reset --hard to prevent any merge conflicts from local edits on the server
+    git reset --hard origin/main || git pull origin main || echo "Proceeding with current checkout."
 fi
 
 # 3. Build & Launch Docker Container

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { 
   Menu, 
   X, 
-  Phone, 
   User as UserIcon, 
   ShieldCheck, 
   LogOut, 
@@ -15,7 +14,6 @@ import {
 } from 'lucide-react';
 import { User } from '../types';
 import { COMPANY_INFO } from '../data/companyData';
-import { buildGeneralWhatsAppUrl } from '../lib/whatsapp';
 import { APP_IMAGES } from '../assets/images';
 import { useTheme } from '../context/ThemeContext';
 
@@ -138,19 +136,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </>
               )}
             </button>
-
-            {/* WhatsApp Quick Direct Link */}
-            <a
-              href={buildGeneralWhatsAppUrl()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-emerald-300 bg-emerald-950/50 hover:bg-emerald-900/50 rounded-xl border border-emerald-600/40 transition-colors"
-              title="Chat on WhatsApp (+237 677 251 088)"
-              id="whatsapp-header-btn"
-            >
-              <Phone className="w-3.5 h-3.5" />
-              <span>WhatsApp</span>
-            </a>
 
             {/* Authentication / User Account Menu */}
             {currentUser ? (
@@ -298,16 +283,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           <div className="space-y-2 pt-1">
-            <a
-              href={buildGeneralWhatsAppUrl()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-emerald-300 bg-emerald-950/40 hover:bg-emerald-900/50 rounded-xl border border-emerald-600/40"
-            >
-              <Phone className="w-4 h-4" />
-              <span>WhatsApp: +237 677 251 088</span>
-            </a>
-
             {currentUser ? (
               <div className={`pt-2 border-t space-y-1 ${isDark ? 'border-purple-900/40' : 'border-slate-200'}`}>
                 <div className={`px-3 py-1 text-xs ${isDark ? 'text-purple-300/80' : 'text-purple-700'}`}>

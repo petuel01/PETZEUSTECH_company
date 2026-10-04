@@ -72,7 +72,7 @@ export const Contact: React.FC = () => {
         <p className={`text-base leading-relaxed ${
           isDark ? 'text-slate-300' : 'text-slate-600'
         }`}>
-          We are based in Cameroon and serve clients locally across Africa and internationally. For the fastest response, we strongly recommend reaching out directly on WhatsApp.
+          We operate 100% online, serving clients across Cameroon, Africa, and internationally. For the fastest response, reach out directly on WhatsApp or submit the contact form below.
         </p>
       </div>
 
@@ -129,8 +129,8 @@ export const Contact: React.FC = () => {
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-purple-500 mt-0.5 flex-shrink-0" />
                 <div>
-                  <strong className={`block font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Physical Base</strong>
-                  <span>{COMPANY_INFO.location}, South West Region, Cameroon</span>
+                  <strong className={`block font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Service Delivery</strong>
+                  <span>100% Online & Remote (Worldwide & Cameroon)</span>
                 </div>
               </div>
 
